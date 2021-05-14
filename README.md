@@ -13,3 +13,10 @@ https://prgms.tistory.com/53
 ### Web Page
 
 https://cho-hadam.github.io/cat-gallery/index.html
+
+---
+
+### 오류들
+
+- 처음 루트 렌더할 때 뒤로가기 버튼이 보였다 사라지는 현상
+- Breadcrumb로 path 이동 시 root에서 뒤로가기 버튼이 보이는 현상
