@@ -4,6 +4,8 @@ import ImageViewer from "./components/ImageViewer.js";
 import Loading from "./components/Loading.js";
 import Nodes from "./components/Nodes.js";
 
+const cache = {};
+
 export default function App($app) {
   this.state = {
     isRoot: false,
@@ -31,26 +33,33 @@ export default function App($app) {
 
   const nodes = new Nodes({
     $app,
-    initialState: {
-      isRoot: this.state.isRoot,
-      nodes: this.state.nodes,
-    },
+    initialState: [],
     onClick: async (node) => {
       try {
         if (node.type === "DIRECTORY") {
           try {
-            this.setState({
-              ...this.state,
-              isLoading: true,
-            });
+            if (cache[node.id]) {
+              this.setState({
+                ...this.state,
+                isRoot: false,
+                depth: [...this.state.depth, node],
+                nodes: cache[node.id],
+              });
+            } else {
+              this.setState({
+                ...this.state,
+                isLoading: true,
+              });
 
-            const nextNodes = await request(node.id);
-            this.setState({
-              ...this.state,
-              isRoot: false,
-              depth: [...this.state.depth, node],
-              nodes: nextNodes,
-            });
+              const nextNodes = await request(node.id);
+              this.setState({
+                ...this.state,
+                isRoot: false,
+                depth: [...this.state.depth, node],
+                nodes: nextNodes,
+              });
+              cache[node.id] = nextNodes;
+            }
           } catch (e) {
             console.error(`Error: ${e.message}`);
           } finally {
@@ -85,19 +94,16 @@ export default function App($app) {
             : nextState.depth[nextState.depth.length - 1].id;
 
         if (prevNodeId === null) {
-          const rootNodes = await request();
           this.setState({
             ...nextState,
             isRoot: true,
-            nodes: rootNodes,
+            nodes: cache.root,
           });
         } else {
-          const prevNodes = await request(prevNodeId);
-
           this.setState({
             ...nextState,
             isRoot: false,
-            nodes: prevNodes,
+            nodes: cache[prevNodeId],
           });
         }
       } catch (e) {
@@ -139,6 +145,7 @@ export default function App($app) {
         isRoot: true,
         nodes: rootNodes,
       });
+      cache.root = rootNodes;
     } catch (e) {
       console.error(`${e} Error: ${e.message}`);
     } finally {
