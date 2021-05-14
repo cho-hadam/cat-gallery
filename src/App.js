@@ -58,7 +58,7 @@ export default function App($app) {
 
   const nodes = new Nodes({
     $app,
-    initialState: [],
+    initialState: {},
     onClick: async (node) => {
       try {
         if (node.type === "DIRECTORY") {

@@ -28,14 +28,10 @@ export default function ImageViewer({ $app, initialState, onCloseModal }) {
 
   this.render = () => {
     this.$target.innerHTML = `
-            <div class="content">
-                ${
-                  this.state
-                    ? `<img src="${IMAGE_BASE_URL}${this.state}" />`
-                    : ""
-                }
-            </div>
-        `;
+      <div class="content">
+        ${this.state ? `<img src="${IMAGE_BASE_URL}${this.state}" />` : ""}
+      </div>
+    `;
 
     this.$target.style.display = this.state ? "block" : "none";
   };

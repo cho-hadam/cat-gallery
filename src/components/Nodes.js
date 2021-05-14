@@ -13,7 +13,7 @@ export default function Nodes({ $app, initialState, onClick, onBackClick }) {
   };
 
   this.render = () => {
-    if (this.state.nodes) {
+    if (this.state.nodes.length !== 0) {
       const nodesTemplate = this.state.nodes
         .map((node) => {
           const iconPath =
@@ -22,19 +22,19 @@ export default function Nodes({ $app, initialState, onClick, onBackClick }) {
               : "./assets/directory.png";
 
           return `
-                    <div class="Node" data-node-id="${node.id}">
-                        <img src="${iconPath}" />
-                        <div>${node.name}</div>
-                    </div>
-                `;
+            <div class="Node" data-node-id="${node.id}">
+                <img src="${iconPath}" />
+                <div>${node.name}</div>
+            </div>
+          `;
         })
         .join("");
 
       this.$target.innerHTML = !this.state.isRoot
         ? `<div class="Node">
-                        <img src="./assets/prev.png" />
-                    </div>
-                    ${nodesTemplate}`
+              <img src="./assets/prev.png" />
+          </div>
+          ${nodesTemplate}`
         : nodesTemplate;
     }
   };
